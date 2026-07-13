@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "i18next": "^26.3.4",
+    "nodemailer": "^9.0.3",
+    "razorpay": "^2.9.6",
+    "react-i18next": "^17.0.8",
+    "ua-parser-js": "^2.0.10"
+  }
+}

@@ -1,0 +1,520 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import {
+  ArrowLeft,
+  Calendar,
+  MapPin,
+  Link as LinkIcon,
+  MoreHorizontal,
+  Camera,
+  Settings,
+} from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { Button } from "./ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import TweetCard from "./TweetCard";
+import { Card, CardContent } from "./ui/card";
+import Editprofile from "./Editprofile";
+import axiosInstance from "@/lib/axiosInstance";
+
+interface Tweet {
+  id: string;
+  author: {
+    id: string;
+    username: string;
+    displayName: string;
+    avatar: string;
+    verified?: boolean;
+  };
+  content: string;
+  timestamp: string;
+  likes: number;
+  retweets: number;
+  comments: number;
+  liked?: boolean;
+  retweeted?: boolean;
+  image?: string;
+}
+const tweets: Tweet[] = [
+  {
+    id: "1",
+    author: {
+      id: "1",
+      username: "elonmusk",
+      displayName: "Elon Musk",
+      avatar:
+        "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&w=400",
+      verified: true,
+    },
+    content:
+      "Just had an amazing conversation about the future of AI. The possibilities are endless!",
+    timestamp: "2h",
+    likes: 1247,
+    retweets: 324,
+    comments: 89,
+    liked: false,
+    retweeted: false,
+  },
+  {
+    id: "2",
+    author: {
+      id: "1",
+      username: "sarahtech",
+      displayName: "Sarah Johnson",
+      avatar:
+        "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=400",
+      verified: false,
+    },
+    content:
+      "Working on some exciting new features for our app. Can't wait to share what we've been building! 🚀",
+    timestamp: "4h",
+    likes: 89,
+    retweets: 23,
+    comments: 12,
+    liked: true,
+    retweeted: false,
+  },
+  {
+    id: "3",
+    author: {
+      id: "4",
+      username: "designguru",
+      displayName: "Alex Chen",
+      avatar:
+        "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=400",
+      verified: true,
+    },
+    content:
+      "The new design system is finally complete! It took 6 months but the results are incredible. Clean, consistent, and accessible.",
+    timestamp: "6h",
+    likes: 456,
+    retweets: 78,
+    comments: 34,
+    liked: false,
+    retweeted: true,
+    image:
+      "https://images.pexels.com/photos/196645/pexels-photo-196645.jpeg?auto=compress&cs=tinysrgb&w=800",
+  },
+];
+export default function ProfilePage() {
+  const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState("posts");
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(
+  localStorage.getItem("notificationsEnabled") !== "false"
+);
+const [language, setLanguage] = useState(
+  localStorage.getItem("language") || "English"
+);
+
+  if (!user) return null;
+  const [tweets, setTweets] = useState<any>([]);
+  const [loading, setloading] = useState(false);
+  const [loginHistory, setLoginHistory] = useState<any>([]);
+  const fetchTweets = async () => {
+  try {
+    setloading(true);
+
+    const res = await axiosInstance.get("/post");
+
+    setTweets(res.data);
+
+  } catch (error) {
+    console.error(error);
+
+  } finally {
+    setloading(false);
+  }
+};
+
+const fetchLoginHistory = async () => {
+  try {
+    const res = await axiosInstance.get(
+      `/login-history/${user._id}`
+    );
+
+    setLoginHistory(res.data);
+
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+useEffect(() => {
+  fetchTweets();
+
+  if (user) {
+    fetchLoginHistory();
+  }
+}, [user]);
+  
+  // Filter tweets by current user
+  const userTweets = tweets.filter((tweet: any) => tweet.author._id === user._id);
+
+ const translations: any = {
+  English: {
+    notifications: "Notifications",
+    language: "Language",
+  },
+  Hindi: {
+    notifications: "सूचनाएं",
+    language: "भाषा",
+  },
+  French: {
+    notifications: "Notifications",
+    language: "Langue",
+  },
+  Spanish: {
+    notifications: "Notificaciones",
+    language: "Idioma",
+  },
+  Portuguese: {
+    notifications: "Notificações",
+    language: "Idioma",
+  },
+  Chinese: {
+    notifications: "通知",
+    language: "语言",
+  },
+};
+ return (
+<div className="min-h-screen bg-gradient-to-br from-black via-[#08152b] to-black text-white">      {/* Header */}
+      <div className="sticky top-0 z-20 border-b border-[#2f3336] bg-black/80 backdrop-blur-xl">
+        <div className="flex items-center px-4 py-3 space-x-8">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="p-2 rounded-full hover:bg-gray-900"
+          >
+            <ArrowLeft className="h-5 w-5 text-white" />
+          </Button>
+          <div>
+            <h1 className="text-xl font-bold text-white">{user.displayName}</h1>
+            <p className="text-sm text-gray-400">{userTweets.length} posts</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Cover Photo */}
+      <div className="relative">
+        <div className="relative h-56 rounded-b-3xl bg-gradient-to-r from-[#08152b] via-[#1D9BF0] to-[#0f172a]">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-4 right-4 p-2 rounded-full bg-black/50 hover:bg-black/70"
+          >
+            <Camera className="h-5 w-5 text-white" />
+          </Button>
+        </div>
+
+       
+{/* Profile Picture */}
+        <div className="absolute -bottom-16 left-4">
+          <div className="relative">
+<Avatar className="h-36 w-36 border-4 border-[#1D9BF0] shadow-[0_0_30px_rgba(29,155,240,.5)]">              <AvatarImage src={user.avatar} alt={user.displayName} />
+              <AvatarFallback className="text-2xl">
+                {user.displayName[0]}
+              </AvatarFallback>
+            </Avatar>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute bottom-2 right-2 p-2 rounded-full bg-black/70 hover:bg-black/90"
+            >
+              <Camera className="h-4 w-4 text-white" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Edit Profile Button */}
+        <div className="flex justify-end p-4">
+          <Button
+            variant="outline"
+className="rounded-full bg-[#1D9BF0] px-8 py-6 font-bold text-white hover:bg-[#1484d6]"            onClick={() => setShowEditModal(true)}
+          >
+            Edit profile
+          </Button>
+        </div>
+      </div>
+
+      {/* Profile Info */}
+      <div className="px-4 pb-4 mt-12">
+        <div className="flex items-start justify-between mb-3">
+          <div>
+<h1 className="text-4xl font-extrabold tracking-wide">              {user.displayName}
+            </h1>
+            <p className="text-gray-400">@{user.username}</p>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="p-2 rounded-full hover:bg-gray-900"
+          >
+            <MoreHorizontal className="h-5 w-5 text-gray-400" />
+          </Button>
+        </div>
+
+        {user.bio && (
+          <p className="mb-5 text-lg leading-8 text-gray-200">
+  {user.bio}
+</p>
+)}
+<div className="mt-6 mb-6 flex gap-8">
+
+<div>
+
+<h2 className="text-2xl font-bold">
+{userTweets.length}
+</h2>
+
+<p className="text-gray-400">
+Posts
+</p>
+
+</div>
+
+<div>
+
+
+<p className="text-gray-400">
+Following
+</p>
+
+</div>
+
+<div>
+
+<h2 className="text-2xl font-bold">
+1200
+</h2>
+
+<p className="text-gray-400">
+Followers
+</p>
+
+</div>
+
+</div>
+          <p className="mb-5 text-lg leading-8 text-gray-200" >{user.bio}</p>
+
+        <div className="flex items-center space-x-4 text-gray-400 text-sm mb-3">
+          <div className="flex items-center space-x-1">
+            <MapPin className="h-4 w-4" />
+            <span>{user.location ? user.location : "Earth"}</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <LinkIcon className="h-4 w-4" />
+            <span className="text-blue-400">
+              {user.website ? user.website : "example.com"}
+            </span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <Calendar className="h-4 w-4" />
+            <span>
+              Joined{" "}
+              {user.joinedDate &&
+                new Date(user.joinedDate).toLocaleDateString("en-us", {
+                  month: "long",
+                  year: "numeric",
+                })}
+            </span>
+          </div>
+        </div>
+      </div>
+
+     
+    <div className="mt-4 flex items-center justify-between border border-[#2f3336] bg-[#111827] rounded-lg p-3">
+  <span className="text-white font-medium">
+    🔔 {translations[language].notifications}
+  </span>
+
+  <Button
+    variant="outline"
+    onClick={() => {
+      const newValue = !notificationsEnabled;
+      setNotificationsEnabled(newValue);
+
+      localStorage.setItem(
+        "notificationsEnabled",
+        String(newValue)
+      );
+    }}
+  >
+    {notificationsEnabled ? "ON" : "OFF"}
+  </Button>
+</div>
+
+<div className="mt-4 border border-[#2f3336] bg-[#111827] rounded-lg p-3">
+  <h3 className="text-white font-medium mb-2">
+    🌍 {translations[language].language}
+  </h3>
+
+  <select
+    value={language}
+    onChange={(e) => {
+      setLanguage(e.target.value);
+      localStorage.setItem("language", e.target.value);
+    }}
+    className="bg-black text-white border border-gray-600 rounded px-3 py-2 w-full"
+  >
+    <option>English</option>
+    <option>Hindi</option>
+    <option>French</option>
+    <option>Spanish</option>
+    <option>Portuguese</option>
+    <option>Chinese</option>
+  </select>
+</div>
+ {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-5 bg-transparent border-b border-[#2f3336] bg-[#111827] rounded-none h-auto">
+          <TabsTrigger
+            value="posts"
+            className="data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=active]:border-b-2 data-[state=active]:border-blue-500 data-[state=active]:rounded-none text-gray-400 hover:bg-[#111827] py-4 font-semibold"
+          >
+            Posts
+          </TabsTrigger>
+          <TabsTrigger
+            value="replies"
+            className="data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=active]:border-b-2 data-[state=active]:border-blue-500 data-[state=active]:rounded-none text-gray-400 hover:bg-[#111827] py-4 font-semibold"
+          >
+            Replies
+          </TabsTrigger>
+          <TabsTrigger
+            value="highlights"
+            className="data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=active]:border-b-2 data-[state=active]:border-blue-500 data-[state=active]:rounded-none text-gray-400 hover:bg-gray-900/50 py-4 font-semibold"
+          >
+            Highlights
+          </TabsTrigger>
+          <TabsTrigger
+            value="articles"
+            className="data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=active]:border-b-2 data-[state=active]:border-blue-500 data-[state=active]:rounded-none text-gray-400 hover:bg-gray-900/50 py-4 font-semibold"
+          >
+            Articles
+          </TabsTrigger>
+          <TabsTrigger
+            value="media"
+            className="data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=active]:border-b-2 data-[state=active]:border-blue-500 data-[state=active]:rounded-none text-gray-400 hover:bg-gray-900/50 py-4 font-semibold"
+          >
+            Media
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="posts" className="mt-0">
+          <div className="divide-y divide-gray-800">
+            { loading ? (
+              <Card className="bg-black border-none">
+                <CardContent className="py-12 text-center">
+                  <div className="text-gray-400">
+                    <h3 className="text-2xl font-bold mb-2">
+                      You haven't posted yet
+                    </h3>
+                    <p>When you post, it will show up here.</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              userTweets.map((tweet:any) => (
+                <TweetCard key={tweet._id} tweet={tweet} />
+              ))
+            )}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="replies" className="mt-0">
+          <Card className="bg-black border-none">
+            <CardContent className="py-12 text-center">
+              <div className="text-gray-400">
+                <h3 className="text-2xl font-bold mb-2">
+                  You haven't replied yet
+                </h3>
+                <p>When you reply to a post, it will show up here.</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="highlights" className="mt-0">
+          <Card className="bg-black border-none">
+            <CardContent className="py-12 text-center">
+              <div className="text-gray-400">
+                <h3 className="text-2xl font-bold mb-2">
+                  Lights, camera … attachments!
+                </h3>
+                <p>When you post photos or videos, they will show up here.</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="articles" className="mt-0">
+          <Card className="bg-black border-none">
+            <CardContent className="py-12 text-center">
+              <div className="text-gray-400">
+                <h3 className="text-2xl font-bold mb-2">
+                  You haven't written any articles
+                </h3>
+                <p>When you write articles, they will show up here.</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="media" className="mt-0">
+          <Card className="bg-black border-none">
+            <CardContent className="py-12 text-center">
+              <div className="text-gray-400">
+                <h3 className="text-2xl font-bold mb-2">
+                  Lights, camera … attachments!
+                </h3>
+                <p>When you post photos or videos, they will show up here.</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+      <div className="mt-6 border border-[#2f3336] bg-[#111827] rounded-lg p-4">
+  <h2 className="text-white text-xl font-bold mb-4">
+    Login History
+  </h2>
+
+  {loginHistory.length === 0 ? (
+    <p className="text-gray-400">No login history found.</p>
+  ) : (
+    loginHistory.map((item: any, index: number) => (
+      <div
+        key={index}
+        className="border-b border-[#2f3336] py-4 hover:bg-[#1a1f2e] rounded-xl px-4 transition"
+      >
+        <p className="text-white">
+          <strong>Browser:</strong> {item.browser}
+        </p>
+
+        <p className="text-white">
+          <strong>OS:</strong> {item.os}
+        </p>
+
+        <p className="text-white">
+          <strong>Device:</strong> {item.device}
+        </p>
+
+        <p className="text-white">
+          <strong>IP:</strong> {item.ip}
+        </p>
+
+        <p className="text-gray-400 text-sm">
+          {new Date(item.loginTime).toLocaleString()}
+        </p>
+      </div>
+    ))
+  )}
+</div>
+<Editprofile
+        isopen={showEditModal}
+        onclose={() => setShowEditModal(false)}
+      />
+    </div>
+  );
+}
