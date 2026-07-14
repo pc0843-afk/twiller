@@ -60,8 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
+const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     // Check for existing session
     const unsubcribe = onAuthStateChanged(auth, async (firebaseUser) => {
