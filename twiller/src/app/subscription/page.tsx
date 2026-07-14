@@ -43,6 +43,20 @@ export default function SubscriptionPage() {
     plan: string,
     amount: number
   ) => {
+    const currentTime = new Date();
+
+const indiaTime = new Date(
+  currentTime.toLocaleString("en-US", {
+    timeZone: "Asia/Kolkata",
+  })
+);
+
+const hour = indiaTime.getHours();
+
+if (hour < 10 || hour >= 11) {
+  alert("Payments are allowed only between 10:00 AM and 11:00 AM IST.");
+  return;
+}
     try {
       // Free plan doesn't need payment
       if (amount === 0) {
@@ -192,14 +206,6 @@ className="mt-8 w-full rounded-full bg-[#1D9BF0] py-4 text-lg font-bold shadow-l
     </div>
   );
 }
-
-const currentTime = new Date();
-
-const indiaTime = new Date(
-  currentTime.toLocaleString("en-US", {
-    timeZone: "Asia/Kolkata",
-  })
-);
 
 const hour = indiaTime.getHours();
 
