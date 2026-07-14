@@ -308,10 +308,15 @@ await axiosInstance.post("/login-history", {
   device: browserInfo.device.type || "Desktop",
   ip: ipData.ip,
 });
-  } catch (error) {
-    console.error(error);
-    alert("Google Login Failed");
-  } finally {
+ } catch (error: any) {
+  console.error("GOOGLE LOGIN ERROR:", error);
+
+  if (error.response) {
+    console.log("Backend Response:", error.response.data);
+  }
+
+  alert(error.message || "Google Login Failed");
+} finally {
     setIsLoading(false);
   }
 };
