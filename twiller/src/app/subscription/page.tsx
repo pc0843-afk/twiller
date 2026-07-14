@@ -43,14 +43,14 @@ export default function SubscriptionPage() {
     plan: string,
     amount: number
   ) => {
-    const currentTime = new Date();
+
+const currentTime = new Date();
 
 const indiaTime = new Date(
   currentTime.toLocaleString("en-US", {
     timeZone: "Asia/Kolkata",
   })
 );
-
 const hour = indiaTime.getHours();
 
 if (hour < 10 || hour >= 11) {
@@ -157,8 +157,6 @@ prefill: {
 ⭐ MOST POPULAR
 </div>
 )}
-className="relative w-80 rounded-3xl border border-[#2f3336] bg-gradient-to-br from-[#111827] via-[#0f172a] to-black p-8 shadow-xl shadow-blue-500/10 transition-all duration-300 hover:-translate-y-2 hover:border-[#1D9BF0] hover:shadow-blue-500/30" 
-
 <div className="text-center mb-4">
 
 {plan.name === "Free" && (
@@ -190,10 +188,9 @@ className="relative w-80 rounded-3xl border border-[#2f3336] bg-gradient-to-br f
             </p>
 
             <button
-              onClick={() =>
-                handlePayment(plan.name, plan.amount)
-              }
-className="mt-8 w-full rounded-full bg-[#1D9BF0] py-4 text-lg font-bold shadow-lg shadow-blue-500/30 transition-all duration-300 hover:scale-105 hover:bg-[#1484d6]"            >
+  onClick={() => handlePayment(plan.name, plan.amount)}
+  className="mt-8 w-full rounded-full bg-[#1D9BF0] py-4 text-lg font-bold shadow-lg shadow-blue-500/30 transition-all duration-300 hover:scale-105 hover:bg-[#1484d6]"
+>
               Select Plan
             </button>
 
@@ -204,13 +201,5 @@ className="mt-8 w-full rounded-full bg-[#1D9BF0] py-4 text-lg font-bold shadow-l
       </div>
 
     </div>
-  );
-}
-
-const hour = indiaTime.getHours();
-
-if (hour < 10 || hour >= 11) {
-  alert(
-    "Payments are allowed only between 10:00 AM and 11:00 AM IST."
   );
 }
