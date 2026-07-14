@@ -20,7 +20,15 @@ console.log("KEY ID =", process.env.RAZORPAY_KEY_ID);
 console.log("KEY SECRET =", process.env.RAZORPAY_KEY_SECRET);
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "https://twiller-ixa5.vercel.app",
+      "http://localhost:3000",
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 app.get("/", (req, res) => {
