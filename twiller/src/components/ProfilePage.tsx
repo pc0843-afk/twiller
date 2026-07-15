@@ -180,8 +180,7 @@ useEffect(() => {
   },
 };
  return (
-<div className="min-h-screen bg-gradient-to-br from-black via-[#08152b] to-black text-white">      {/* Header */}
-      <div className="sticky top-0 z-20 border-b border-[#2f3336] bg-black/80 backdrop-blur-xl">
+<div className="min-h-screen bg-gradient-to-br from-[#020617] via-[#08152b] to-black text-white">      <div className="sticky top-0 z-20 border-b border-[#2f3336] bg-[#000000]/70 backdrop-blur-2xl backdrop-blur-xl">
         <div className="flex items-center px-4 py-3 space-x-8">
           <Button
             variant="ghost"
@@ -199,7 +198,7 @@ useEffect(() => {
 
       {/* Cover Photo */}
       <div className="relative">
-        <div className="relative h-56 rounded-b-3xl bg-gradient-to-r from-[#08152b] via-[#1D9BF0] to-[#0f172a]">
+        <div className="relative h-56 rounded-b-3xl rounded-b-3xl bg-gradient-to-r from-[#08152b] via-[#1D9BF0] to-[#0f172a]">
           <Button
             variant="ghost"
             size="sm"
@@ -211,10 +210,8 @@ useEffect(() => {
 
        
 {/* Profile Picture */}
-        <div className="absolute -bottom-16 left-4">
-          <div className="relative">
-<Avatar className="h-36 w-36 border-4 border-[#1D9BF0] shadow-[0_0_30px_rgba(29,155,240,.5)]">              <AvatarImage src={user.avatar} alt={user.displayName} />
-              <AvatarFallback className="text-2xl">
+<div className="absolute -bottom-16 left-6">      <div className="relative">
+<Avatar className="h-32 w-32 md:h-36 md:w-36 border-4 border-[#1D9BF0] shadow-[0_0_35px_rgba(29,155,240,.45)]">              <AvatarFallback className="text-2xl">
                 {user.displayName[0]}
               </AvatarFallback>
             </Avatar>
@@ -229,41 +226,38 @@ useEffect(() => {
         </div>
 
         {/* Edit Profile Button */}
-        <div className="flex justify-end p-4">
-          <Button
+<div className="flex justify-end mt-10 px-5">       <Button
             variant="outline"
-className="rounded-full bg-[#1D9BF0] px-8 py-6 font-bold text-white hover:bg-[#1484d6]"            onClick={() => setShowEditModal(true)}
-          >
+className="rounded-full bg-[#1D9BF0] hover:bg-[#1484d6] px-7 h-11 text-sm font-bold text-white"          >
             Edit profile
           </Button>
         </div>
       </div>
 
       {/* Profile Info */}
-      <div className="px-4 pb-4 mt-12">
-        <div className="flex items-start justify-between mb-3">
+<div className="px-6 pb-6 mt-12">    <div className="flex items-start justify-between mb-3">
           <div>
-<h1 className="text-4xl font-extrabold tracking-wide">              {user.displayName}
+<h1 className="text-4xl font-black tracking-tight">          {user.displayName}
             </h1>
-            <p className="text-gray-400">@{user.username}</p>
+            <p className="text-gray-400 mb-4">
+  @{user.username}
+</p>
           </div>
           <Button
             variant="ghost"
             size="sm"
             className="p-2 rounded-full hover:bg-gray-900"
           >
-            <MoreHorizontal className="h-5 w-5 text-gray-400" />
+            <MoreHorizontal className="h-5 w-5 text-gray-500 text-lg" />
           </Button>
         </div>
 
         {user.bio && (
-          <p className="mb-5 text-lg leading-8 text-gray-200">
-  {user.bio}
-</p>
+  <p className="mb-5 text-lg leading-8 text-gray-200">
+    {user.bio}
+  </p>
 )}
-<div className="mt-6 mb-6 flex gap-8">
-
-<div>
+<div className="mt-10 flex justify-between max-w-md"><div>
 
 <h2 className="text-2xl font-bold">
 {userTweets.length}
@@ -276,12 +270,10 @@ Posts
 </div>
 
 <div>
-
-
+<h2 className="text-2xl font-bold">10</h2>
 <p className="text-gray-400">
 Following
 </p>
-
 </div>
 
 <div>
@@ -325,7 +317,7 @@ Followers
       </div>
 
      
-    <div className="mt-4 flex items-center justify-between border border-[#2f3336] bg-[#111827] rounded-lg p-3">
+    <div className="mt-4 flex items-center justify-between border border-[#2f3336] bg-[#111827] rounded-3xl shadow-xl hover:shadow-blue-500/20 transition-all duration-300 p-3">
   <span className="text-white font-medium">
     🔔 {translations[language].notifications}
   </span>
@@ -346,7 +338,7 @@ Followers
   </Button>
 </div>
 
-<div className="mt-4 border border-[#2f3336] bg-[#111827] rounded-lg p-3">
+<div className="mt-4 border border-[#2f3336] bg-[#111827] rounded-3xl shadow-xl hover:shadow-blue-500/20 transition-all duration-300 p-3">
   <h3 className="text-white font-medium mb-2">
     🌍 {translations[language].language}
   </h3>
@@ -372,13 +364,13 @@ Followers
         <TabsList className="grid w-full grid-cols-5 bg-transparent border-b border-[#2f3336] bg-[#111827] rounded-none h-auto">
           <TabsTrigger
             value="posts"
-            className="data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=active]:border-b-2 data-[state=active]:border-blue-500 data-[state=active]:rounded-none text-gray-400 hover:bg-[#111827] py-4 font-semibold"
+            className="data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=active]:border-b-2 data-[state=active]:border-blue-500 data-[state=active]:rounded-none text-gray-400 hover:bg-[#1D9BF0]/10 py-4 font-semibold"
           >
             Posts
           </TabsTrigger>
           <TabsTrigger
             value="replies"
-            className="data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=active]:border-b-2 data-[state=active]:border-blue-500 data-[state=active]:rounded-none text-gray-400 hover:bg-[#111827] py-4 font-semibold"
+            className="data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=active]:border-b-2 data-[state=active]:border-blue-500 data-[state=active]:rounded-none text-gray-400 hover:bg-[#1D9BF0]/10 py-4 font-semibold"
           >
             Replies
           </TabsTrigger>
@@ -403,7 +395,7 @@ Followers
         </TabsList>
 
         <TabsContent value="posts" className="mt-0">
-          <div className="divide-y divide-gray-800">
+          <div className="space-y-3">
             { loading ? (
               <Card className="bg-black border-none">
                 <CardContent className="py-12 text-center">
@@ -475,7 +467,7 @@ Followers
           </Card>
         </TabsContent>
       </Tabs>
-      <div className="mt-6 border border-[#2f3336] bg-[#111827] rounded-lg p-4">
+      <div className="mt-8 rounded-3xl shadow-xl hover:shadow-blue-500/20 transition-all duration-300 border border-[#2f3336] bg-[#111827]/80 p-5 shadow-lg">
   <h2 className="text-white text-xl font-bold mb-4">
     Login History
   </h2>
@@ -486,7 +478,7 @@ Followers
     loginHistory.map((item: any, index: number) => (
       <div
         key={index}
-        className="border-b border-[#2f3336] py-4 hover:bg-[#1a1f2e] rounded-xl px-4 transition"
+        className="border-b border-[#2f3336] py-4 hover:bg-[#1D9BF0]/10 rounded-xl px-4 transition"
       >
         <p className="text-white">
           <strong>Browser:</strong> {item.browser}
