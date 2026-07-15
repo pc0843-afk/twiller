@@ -189,40 +189,44 @@ const usercred = await signInWithEmailAndPassword(
   }
 };
   const signup = async (
-    email: string,
-    password: string,
-    username: string,
-    displayName: string
-  ) => {
-    setIsLoading(true);
-    // Mock authentication - in real app, this would call an API
+  email: string,
+  password: string,
+  username: string,
+  displayName: string
+) => {
+  setIsLoading(true);
+
+  try {
     const usercred = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
-    const user = usercred.user;
-    const newuser: any = {
+
+    const firebaseUser = usercred.user;
+
+    const newuser = {
       username,
       displayName,
-      avatar: user.photoURL || "https://images.pexels.com/photos/1139743/pexels-photo-1139743.jpeg?auto=compress&cs=tinysrgb&w=400",
-      email: user.email,
+      avatar:
+        firebaseUser.photoURL ||
+        "https://images.pexels.com/photos/1139743/pexels-photo-1139743.jpeg?auto=compress&cs=tinysrgb&w=400",
+      email: firebaseUser.email,
     };
+
     const res = await axiosInstance.post("/register", newuser);
+
     if (res.data) {
       setUser(res.data);
       localStorage.setItem("twitter-user", JSON.stringify(res.data));
     }
-    // const mockUser: User = {
-    //   id: '1',
-    //   username,
-    //   displayName,
-    //   avatar: 'https://images.pexels.com/photos/1139743/pexels-photo-1139743.jpeg?auto=compress&cs=tinysrgb&w=400',
-    //   bio: '',
-    //   joinedDate: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
-    // };
+  } catch (error: any) {
+    console.error("Signup Error:", error);
+    alert(error.message || "Signup Failed");
+  } finally {
     setIsLoading(false);
-  };
+  }
+};
 
   const logout = async () => {
     setUser(null);
